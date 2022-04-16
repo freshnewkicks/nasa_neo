@@ -3,16 +3,11 @@ import React, { useState, useEffect, useRef } from "react";
 
 function Home() {
 
-    const [planetName, setPlanet] = useState(`not this`);
     const [loading, setLoading] = useState(true);
     const [neoData, setNeoData] = useState({});
-
-    const myElements = useRef();
-    const planetNameRef = useRef();
-    const neoDataRef = useRef();
+    const [weeklyArray, setWeeklyArray] = useState([])
 
     let dateResults = [];
-    let neoResults = [];
 
     // recent date (7 day)
     function getLastWeekDates() {
@@ -26,15 +21,28 @@ function Home() {
     getLastWeekDates()
 
     let resData;
-    function grabData() {
-            fetch(`https://api.nasa.gov/neo/rest/v1/feed?start_date=${dateResults[0]}&end_date=${dateResults[6]}&api_key=REDACTED`)
-            .then( async(res) => {
 
+    // Note about fetch options:
+    // no-cors mode won't magically make our CORS request work
+    // One of the side effects of no-cors is that it tells frontend JS code from
+    // seeing contents of the response body and headers under all circumstances
+
+    // Browsers by default block frontend code from accessing resources cross-origin.
+    // If Access-Control-Allow-Origin is in a response, then browsers relax that blocking allow
+    // code to access the response
+
+
+
+
+    function grabData() {
+            fetch(`https://nasa-api-server.herokuapp.com/`)
+            .then( async(res) => {
                 resData =  await res.json();
-                myElements.current = resData;
-                for (let i = 0; i < 7; i++) {
-                    console.log(myElements.current.near_earth_objects[dateResults[i]][0])
-                }
+
+
+                Object.entries(resData.near_earth_objects).forEach(h => {
+                    weeklyArray.unshift(h)
+                })
 
                 setLoading(false)
 
@@ -47,19 +55,15 @@ function Home() {
     useEffect(  () => {
         if (loading)
         {
-            // Do Nothing
             grabData()
         }
         else if (!loading)
         {
-            setNeoData(myElements.current.near_earth_objects[dateResults[0]][0])
+            setNeoData(resData)
+            setWeeklyArray(weeklyArray)
+            console.log(weeklyArray)
         }
-    }, [loading])
-
-    const handleClick = () => {
-        grabData()
-    }
-
+    }, [loading, weeklyArray])
     return (
         <div>
             {loading &&
@@ -68,45 +72,29 @@ function Home() {
                 </div>
             }
             {!loading &&
-                <div className="flex flex-col justify-center items-center align-center">
-                    <div
-                        className="p-4 w-9/12 bg-white rounded-lg border shadow-md sm:p-8 dark:bg-gray-800 dark:border-gray-700">
-                        <div className="flex justify-between items-center mb-4">
-                            <h5 className="text-xl font-bold leading-none text-gray-900 dark:text-white">
-                                Recent NEO Data
-                            </h5>
-                            <a href="/#"
-                               className="text-sm font-medium text-blue-600 hover:underline dark:text-blue-500">
-                                View all
-                            </a>
-                        </div>
-                        <div className="flow-root">
-                            <ul className="divide-y divide-gray-200 dark:divide-gray-700">
-                                {dateResults.map(date => {
-                                    return (
-                                        <li className="py-3 sm:py-4">
-                                            <div className="flex items-center space-x-4">
-                                                <div className="flex-shrink-0">
-                                                </div>
-                                                <div className="flex-1 min-w-0">
-                                                    <p className="text-sm font-medium text-gray-900 truncate dark:text-white">
-                                                        {date}
-                                                    </p>
-                                                    <p className="text-sm text-gray-500 truncate dark:text-gray-400">
-                                                        email@windster.com
-                                                    </p>
-                                                </div>
-                                                <div
-                                                    className="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
-                                                    $320
-                                                </div>
-                                            </div>
-                                        </li>
-                                    )
-                                })}
-                            </ul>
-                        </div>
-                    </div>
+                <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
+                    <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                        <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                            <tr>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                                <th scope="row" className="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
+
+                                </th>
+                                <td className="px-6 py-4">
+
+                                </td>
+                                <td className="px-6 py-4">
+
+                                </td>
+                                <td className="px-6 py-4">
+
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             }
         </div>
