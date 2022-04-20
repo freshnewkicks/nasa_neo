@@ -1,64 +1,47 @@
 import '../../App.css';
 import React, { useState, useEffect, useRef } from "react";
 
-function Home() {
-
-    const [planetName, setPlanet] = useState(`not this`);
+const Home = () => {
     const [loading, setLoading] = useState(true);
     const [neoData, setNeoData] = useState({});
+    const [dateResults, setDateResults] = useState([])
 
-    const myElements = useRef();
-    const planetNameRef = useRef();
-    const neoDataRef = useRef();
+    // useRef will persist - across all renders - much like a traditional variable
+    // this is the Reactful way to save a stateless variable
 
-    let dateResults = [];
-    let neoResults = [];
+    let responseRef = useRef(null);
+    let thisWeekRef = useRef([]);
 
-    // recent date (7 day)
-    function getLastWeekDates() {
-        for (let i = 0; i < 7; i++) {
-            let date = new Date();
-            date.setDate(date.getDate() - i);
-            let formattedDate = date.toISOString().split('T')[0];
-            dateResults.unshift(formattedDate);
-        }
-    }
-    getLastWeekDates()
-
-    let resData;
-    function grabData() {
-            fetch(`https://api.nasa.gov/neo/rest/v1/feed?start_date=${dateResults[0]}&end_date=${dateResults[6]}&api_key=REDACTED`)
-            .then( async(res) => {
-
-                resData =  await res.json();
-                myElements.current = resData;
-                for (let i = 0; i < 7; i++) {
-                    console.log(myElements.current.near_earth_objects[dateResults[i]][0])
-                }
-
-                setLoading(false)
-
-            }).catch( (err) => {
-            console.log(err)
-        })
-    }
 
 
     useEffect(  () => {
-        if (loading)
-        {
-            // Do Nothing
-            grabData()
-        }
-        else if (!loading)
-        {
-            setNeoData(myElements.current.near_earth_objects[dateResults[0]][0])
-        }
-    }, [loading])
+        if (loading) {
+            for (let i = 0; i < 7; i++) {
+                let date = new Date();
+                date.setDate(date.getDate() - i);
+                let formattedDate = date.toISOString().split('T')[0];
+                thisWeek.push(formattedDate);
+                thisWeekRef.current = thisWeek;
+            }
 
-    const handleClick = () => {
-        grabData()
-    }
+            fetch('https://nasa-api-server.herokuapp.com')
+                .then( async(res) => {
+                     let data = await res.json()
+                    setLoading(false)
+                    setNeoData(data)
+                })
+                .catch( (err) => {
+                    console.log(err)
+                })
+        }
+
+        if (!loading) {
+            console.log('done loading')
+            console.log(neoData)
+        }
+    }, [])
+
+    const thisWeek = thisWeekRef.current;
 
     return (
         <div>
@@ -67,10 +50,15 @@ function Home() {
                     LOADING
                 </div>
             }
+            {!loading && neoData[0] === "error" &&
+                <div>
+                test
+                </div>
+            }
             {!loading &&
-                <div className="flex flex-col justify-center items-center align-center">
+                <div className="flex flex-coljustify-center items-center align-center">
                     <div
-                        className="p-4 w-9/12 bg-white rounded-lg border shadow-md sm:p-8 dark:bg-gray-800 dark:border-gray-700">
+                        className="w-full p-4 w-9/12 bg-white rounded-lg border shadow-md sm:p-8 dark:bg-gray-800 dark:border-gray-700">
                         <div className="flex justify-between items-center mb-4">
                             <h5 className="text-xl font-bold leading-none text-gray-900 dark:text-white">
                                 Recent NEO Data
@@ -81,30 +69,38 @@ function Home() {
                             </a>
                         </div>
                         <div className="flow-root">
-                            <ul className="divide-y divide-gray-200 dark:divide-gray-700">
-                                {dateResults.map(date => {
-                                    return (
-                                        <li className="py-3 sm:py-4">
-                                            <div className="flex items-center space-x-4">
-                                                <div className="flex-shrink-0">
-                                                </div>
-                                                <div className="flex-1 min-w-0">
-                                                    <p className="text-sm font-medium text-gray-900 truncate dark:text-white">
-                                                        {date}
-                                                    </p>
-                                                    <p className="text-sm text-gray-500 truncate dark:text-gray-400">
-                                                        email@windster.com
-                                                    </p>
-                                                </div>
-                                                <div
-                                                    className="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
-                                                    $320
-                                                </div>
-                                            </div>
-                                        </li>
-                                    )
-                                })}
-                            </ul>
+                            <div className="flex w-full relative overflow-x-auto shadow-md sm:rounded-lg">
+                                <table className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                                    <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                                        <tr className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                                            <th scope="col" className="px-6 py-3">
+                                                Date
+                                            </th>
+                                            <th scope="col" className="px-6 py-3">
+                                                ID
+                                            </th>
+                                            <th scope="col" className="px-6 py-3">
+                                                Name
+                                            </th>
+
+
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    {thisWeek.map((i, k) => {
+                                        return (
+                                            <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                                                <th key={k} scope="col" className="px-6 py-3">{i}</th>
+                                            </tr>
+                                        )
+                                    })}
+
+                                    {
+                                        Object.values(neoData.near_earth_objects)
+                                    }
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>
