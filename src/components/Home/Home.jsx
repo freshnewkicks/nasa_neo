@@ -86,7 +86,7 @@ function Home() {
                                                 </td>
                                                 <td className="text-center">
                                                     {
-                                                        neoData.near_earth_objects[i][0].is_potentially_hazardous_asteroid ? <h1 className="text-red-700 animate-pulse">Yes</h1> : <h1 className="text-md">No</h1>
+                                                        neoData.near_earth_objects[i][0].is_potentially_hazardous_asteroid ? <p className="text-red-700 animate-pulse">Yes</p> : <p className="text-md">No</p>
                                                     }
                                                 </td>
                                             </tr>
