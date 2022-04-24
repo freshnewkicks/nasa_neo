@@ -1,8 +1,10 @@
 import '../../App.css';
 import React, { useState, useEffect, useRef } from "react";
 
+
     // useRef will persist - across all renders - much like a traditional variable
     // this is the Reactful way to save a stateless variable
+
 function Home() {
     const [loading, setLoading] = useState(true)
     const [neoData, setNeoData] = useState({})
@@ -22,7 +24,7 @@ function Home() {
     useEffect(  () => {
 
         if (loading) {
-            fetch('https://nasa-api-server.herokuapp.com')
+            fetch(process.env.REACT_APP_FETCH_URL)
                 .then( async(res) => {
                      let data = await res.json()
                     setLoading(false)
@@ -32,7 +34,6 @@ function Home() {
                     console.log(err)
                 })
         }
-
         if (!loading) {
             console.log(neoData)
         }
@@ -50,8 +51,11 @@ function Home() {
                 </div>
             }
             {!loading &&
-                <div className="parent w-full flex justify-center items-center align-center">
-                    <div className="w-11/12 md:w-8/12 relative overflow-x-auto shadow-md sm:rounded-lg">
+                <div className="parent relative top-6  w-full flex justify-center items-center align-center">
+                    <div className="w-11/12 md:w-10/12 relative overflow-x-auto shadow-md sm:rounded-lg">
+                        <h3 className="w-full text-center border-2">
+                            Recent Objects
+                        </h3>
                         <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
                             <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                             <tr>
@@ -96,7 +100,6 @@ function Home() {
 
                                     )
                                 })
-
                             }
                             </tbody>
                         </table>
