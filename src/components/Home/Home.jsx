@@ -9,13 +9,17 @@ import Nav from '../Nav/Nav'
 function Home() {
     const [loading, setLoading] = useState(true)
     const [neoData, setNeoData] = useState({})
-    const [displayModal, setDisplayModal] = useState(false)
+    const [changeMeasurement, setChangeMeasurement] = useState('ft')
 
-    let handleModalState = () => {
-        if (displayModal === true) {
-            setDisplayModal(false)
+    let handleMeasurementState = () => {
+        if (changeMeasurement == 'ft') {
+            return (
+                setChangeMeasurement('km')
+            )
         } else {
-            setDisplayModal(true)
+            return (
+                setChangeMeasurement('ft')
+            )
         }
     }
 
@@ -45,7 +49,7 @@ function Home() {
         if (!loading) {
             console.log(neoData)
         }
-    }, [loading, displayModal])
+    }, [loading, changeMeasurement])
 
     return (
         <div>
@@ -65,7 +69,9 @@ function Home() {
                         <h3 className="w-full text-center border-2">
                             Recent Objects
                         </h3>
-                        <button onClick={ handleModalState }>Test</button>
+                        <button onClick={ handleMeasurementState } className="flex flex-col flex-wrap">
+                            { changeMeasurement == 'ft' ? 'Imperial' : 'Metric' }
+                        </button>
                         <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
                             <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                             <tr>
@@ -82,7 +88,10 @@ function Home() {
                                     Hazardous?
                                 </th>
                                 <th scope="col" className="px-6 py-3 text-center">
-                                    Relevant Data
+                                    {
+                                        changeMeasurement == 'ft' ? 'Estimated Max Diameter (ft)' : 'Estimated Max' +
+                                            ' Diameter (km)'
+                                    }
                                 </th>
                             </tr>
                             </thead>
@@ -93,7 +102,6 @@ function Home() {
                                         <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 text-center">
                                             <th key={k} scope="row" className="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
                                                 {i}
-                                                { displayModal ? <HomeModal testArg="Test Argument"/> : null }
 
                                             </th>
                                             <td className="text-center">
@@ -111,10 +119,9 @@ function Home() {
                                                     neoData.near_earth_objects[i][0].is_potentially_hazardous_asteroid ? <p className="text-md">Yes</p> : <p className="text-md">No</p>
                                                 }
                                             </td>
-                                            <td className="text-center">
-                                                {
-                                                }
-                                            </td>
+                                            {
+                                                changeMeasurement == 'ft' ? Math.round(neoData.near_earth_objects[i][0].estimated_diameter.feet.estimated_diameter_max) + ' ft' : Math.round(neoData.near_earth_objects[i][0].estimated_diameter.kilometers.estimated_diameter_max * 200) / 200 + ' km'
+                                            }
                                         </tr>
 
                                     )
