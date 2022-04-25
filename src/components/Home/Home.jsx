@@ -69,7 +69,7 @@ function Home() {
                         <h3 className="w-full text-center border-2">
                             Recent Objects
                         </h3>
-                        <button onClick={ handleMeasurementState } className="flex flex-col flex-wrap">
+                        <button type="button" onClick={ handleMeasurementState } className="flex flex-col flex-wrap text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-2.5 py-2.5 mr-2 mb-2 mt-2 dark:bg-blue-600 dark:hover:bg-blue:700 focus:outline-none dark:focus:ring-blue-800">
                             { changeMeasurement == 'ft' ? 'Imperial' : 'Metric' }
                         </button>
                         <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
