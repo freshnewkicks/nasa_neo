@@ -111,6 +111,10 @@ function Home() {
                                                     neoData.near_earth_objects[i][0].is_potentially_hazardous_asteroid ? <p className="text-md">Yes</p> : <p className="text-md">No</p>
                                                 }
                                             </td>
+                                            <td className="text-center">
+                                                {
+                                                }
+                                            </td>
                                         </tr>
 
                                     )
