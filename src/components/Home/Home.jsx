@@ -55,7 +55,10 @@ function Home() {
                         </div>
                         <div className="mt-12 mb-12">
                             <div>
-                                <TextWithVDivider textContentPrimary={``} textContentSecondary={``} />
+                                <div className="flex">
+                                    <TextWithVDivider textContentPrimary={``} textContentSecondary={``} />
+                                    <TextWithVDivider textContentPrimary={``} textContentSecondary={``} />
+                                </div>
                             </div>
                         </div>
                     </div>
