@@ -4,6 +4,7 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import 'flowbite'
+import { AccessAlarm, ThreeDRotation } from '@mui/icons-material'
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 

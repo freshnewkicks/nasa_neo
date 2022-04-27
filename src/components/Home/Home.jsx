@@ -1,27 +1,15 @@
-import '../../App.css';
-import React, { useState, useEffect, useRef } from "react";
-import { HomeModal } from './HomeModal'
 import Nav from '../Nav/Nav'
+import RecentObjectsTable from '../DataTables/RecentObjectsDT'
+import React, {useEffect, useState} from "react";
+import TextWithDivider from "../card/card";
+import TextWithVDivider from "../card/card";
 
     // useRef will persist - across all renders - much like a traditional variable
     // this is the Reactful way to save a stateless variable
 
 function Home() {
-    const [loading, setLoading] = useState(true)
     const [neoData, setNeoData] = useState({})
-    const [changeMeasurement, setChangeMeasurement] = useState('ft')
-
-    let handleMeasurementState = () => {
-        if (changeMeasurement == 'ft') {
-            return (
-                setChangeMeasurement('km')
-            )
-        } else {
-            return (
-                setChangeMeasurement('ft')
-            )
-        }
-    }
+    const [loading, setLoading] = useState(true)
 
     // Note about fetch options:
     // no-cors mode won't magically make our CORS request work
@@ -31,14 +19,11 @@ function Home() {
     // Browsers by default block frontend code from accessing resources cross-origin.
     // If Access-Control-Allow-Origin is in a response, then browsers relax that blocking allow
     // code to access the response
-
-    let responseRef = useRef(null)
-
     useEffect(  () => {
         if (loading) {
             fetch(process.env.REACT_APP_FETCH_URL)
                 .then( async(res) => {
-                     let data = await res.json()
+                    let data = await res.json()
                     setLoading(false)
                     setNeoData(data)
                 })
@@ -49,10 +34,10 @@ function Home() {
         if (!loading) {
             console.log(neoData)
         }
-    }, [loading, changeMeasurement])
+    }, [loading])
 
     return (
-        <div>
+        <>
             <Nav data={neoData.near_earth_objects} loadingState={loading}/>
             {loading &&
                 <div className="parent w-full h-full m-auto flex flex-col justify-center items-center align-center">
@@ -64,77 +49,19 @@ function Home() {
                 </div>
             }
             {!loading &&
-                <div className="parent relative top-6  w-full flex justify-center items-center align-center">
-                    <div className="w-11/12 md:w-10/12 relative overflow-x-auto shadow-md sm:rounded-lg">
-                        <h3 className="w-full text-center border-2">
-                            Recent Objects
-                        </h3>
-                        <button type="button" onClick={ handleMeasurementState } className="flex flex-col flex-wrap text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-2.5 py-2.5 mr-2 mb-2 mt-2 dark:bg-blue-600 dark:hover:bg-blue:700 focus:outline-none dark:focus:ring-blue-800">
-                            { changeMeasurement == 'ft' ? 'Imperial' : 'Metric' }
-                        </button>
-                        <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                            <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                            <tr>
-                                <th scope="col" className="px-6 py-3 text-center">
-                                    Date
-                                </th>
-                                <th scope="col" className="px-6 py-3 text-center">
-                                    Name
-                                </th>
-                                <th scope="col" className="px-6 py-3 text-center">
-                                    Time
-                                </th>
-                                <th scope="col" className="px-6 py-3 text-center">
-                                    Hazardous?
-                                </th>
-                                <th scope="col" className="px-6 py-3 text-center">
-                                    {
-                                        changeMeasurement == 'ft' ? 'Estimated Max Diameter (ft)' : 'Estimated Max' +
-                                            ' Diameter (km)'
-                                    }
-                                </th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            {
-                                Object.keys(neoData.near_earth_objects).sort().reverse().map( (i, k) => {
-                                    return (
-                                        <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 text-center">
-                                            <th key={k} scope="row" className="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
-                                                {i}
-
-                                            </th>
-                                            <td className="text-center">
-                                                {
-                                                    neoData.near_earth_objects[i][0].name
-                                                }
-                                            </td>
-                                            <td className="text-center">
-                                                {
-                                                    neoData.near_earth_objects[i][0].id
-                                                }
-                                            </td>
-                                            <td className="text-center">
-                                                {
-                                                    neoData.near_earth_objects[i][0].is_potentially_hazardous_asteroid ? <p className="text-md">Yes</p> : <p className="text-md">No</p>
-                                                }
-                                            </td>
-                                            {
-                                                changeMeasurement == 'ft' ? Math.round(neoData.near_earth_objects[i][0].estimated_diameter.feet.estimated_diameter_max) + ' ft' : Math.round(neoData.near_earth_objects[i][0].estimated_diameter.kilometers.estimated_diameter_max * 200) / 200 + ' km'
-                                            }
-                                        </tr>
-
-                                    )
-                                })
-                            }
-                            </tbody>
-                        </table>
+                    <div>
+                        <div>
+                            <RecentObjectsTable loadingState={loading} dataIn={neoData} />
+                        </div>
+                        <div className="mt-12 mb-12">
+                            <div>
+                                <TextWithVDivider textContentPrimary={``} textContentSecondary={``} />
+                            </div>
+                        </div>
                     </div>
-
-                </div>
             }
-        </div>
-        )
-    }
+        </>
+    )
+}
 
 export default Home;
