@@ -26,19 +26,19 @@ export default function TextWithDivider(props) {
     <div>
       <Root>
         <Divider>
-          <Chip label={props.options} />
+          <Chip label={props.options.currentTitle} />
         </Divider>
         <Divider>Near Earth Objects</Divider>
-        {options.currentTitle}
+        {props.options.currentTitle}
         <Divider>The Web</Divider>
-        {options.currentTitle}
+        {props.options.currentTitle}
         <Divider textAlign="left" variant="inset">LEFT</Divider>
         {content}
         <Divider textAlign="right">RIGHT</Divider>
         {content}
       </Root>
       {
-        Object.keys(options).map( (i, k) => {
+        Object.keys(props.options).map( (i, k) => {
           return <li key={k}>{i}</li>;
         })
       }
