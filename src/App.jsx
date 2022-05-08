@@ -1,16 +1,19 @@
 import './App.css';
-import React, { useState, useEffect } from "react";
-import Nav from "./components/Nav/Nav";
-import Home from "./components/Home/Home";
+import React from 'react';
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+} from 'react-router-dom';
+import Home from './components/Home/Home';
 
 
-function App() {
-    return (
-        <div>
-            <Home />
-        </div>
-    )
+export default function App() {
+  return (
+    <Router>
+      <Routes>
+        <Route path="/home" element={<Home />} />
+      </Routes>
+    </Router>
+  );
 }
-
-
-export default App;
