@@ -1,7 +1,7 @@
 import Nav from '../Nav/Navbar';
 import RecentObjectsTable from '../DataTables/RecentObjectsDT';
 import React, {useEffect, useState} from 'react';
-import TextWithVDivider from '../TextWithDivider/TextWithDivider';
+import TextWithDivider from '../TextWithDivider/TextWithDivider';
 import Divider from '@mui/material/Divider';
 import Chip from '@mui/material/Chip';
 
@@ -67,7 +67,7 @@ function Home() {
                       <div className="mt-12 mb-12">
                         <div>
                           <div className="flex">
-                            <TextWithVDivider>
+                            <TextWithDivider>
                               <Divider>
                                 <Chip label='test label' />
                               </Divider>
@@ -83,7 +83,7 @@ function Home() {
                               {/* eslint-disable-next-line max-len */}
                               <p><span>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolorem doloribus fugit harum hic modi. Assumenda blanditiis ea eligendi esse excepturi, hic inventore, ipsam iure molestiae non nulla pariatur, similique temporibus?</span><span>Ab aliquid amet aperiam corporis deleniti dicta dolorem esse explicabo facilis incidunt iste iure nulla ratione similique, ullam? Adipisci cumque esse et hic minima neque, numquam possimus similique tempore voluptas!</span></p>
                               {/* eslint-disable-next-line max-len */}
-                            </TextWithVDivider>                            <TextWithVDivider>
+                            </TextWithDivider>                                      <TextWithDivider>
                               <Divider>
                                 <Chip label='test label' />
                               </Divider>
@@ -98,7 +98,7 @@ function Home() {
                               <Divider textAlign="right">RIGHT</Divider>
                               {/* eslint-disable-next-line max-len */}
                               <p><span>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquid beatae debitis doloremque ducimus eaque eligendi nulla tenetur! Debitis ducimus hic laborum nihil officiis perspiciatis quasi recusandae, repudiandae sapiente suscipit? Explicabo?</span><span>Ab aliquam corporis distinctio laudantium, sunt suscipit. Aliquid aut cum, ipsum iure iusto neque quia quisquam, reprehenderit rerum saepe sunt vitae voluptate voluptatum. Adipisci fugit ratione reiciendis ullam voluptatibus. Sed?</span></p>
-                            </TextWithVDivider>
+                            </TextWithDivider>
                           </div>
                         </div>
                       </div>
